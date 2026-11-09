@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+    Name="TaraTari Optimizer App"
+    Manufacturer="TaraTariTools"
+    Version="0.0.1"
+    UpgradeCode="{3ABBF1E6-D7F0-4C4D-B18F-F02852DDE678}"
+    Scope="perMachine">
+    <MajorUpgrade DowngradeErrorMessage="A newer version of TaraTari Optimizer App is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="Main" Title="TaraTari Optimizer App" Level="1">
+      <ComponentGroupRef Id="ApplicationFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+
+    <?if $(var.Arch) = x64 ?>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="TaraTari Optimizer App" />
+    </StandardDirectory>
+    <?else ?>
+    <StandardDirectory Id="ProgramFilesFolder">
+      <Directory Id="INSTALLFOLDER" Name="TaraTari Optimizer App" />
+    </StandardDirectory>
+    <?endif ?>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="TaraTari Optimizer App" />
+    </StandardDirectory>
+
+    <ComponentGroup Id="ApplicationFiles" Directory="INSTALLFOLDER">
+      <Files Include="$(var.BuildDir)\**" />
+    </ComponentGroup>
+
+    <Component Id="StartMenuShortcut" Directory="ApplicationProgramsFolder" Guid="*">
+      <Shortcut
+        Id="TaraTariOptimizerShortcut"
+        Name="TaraTari Optimizer App"
+        Target="[INSTALLFOLDER]TaraTariOptimizerApp.exe"
+        WorkingDirectory="INSTALLFOLDER" />
+      <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
+      <RegistryValue
+        Root="HKLM"
+        Key="Software\TaraTariTools\TaraTariOptimizerApp"
+        Name="Installed"
+        Type="integer"
+        Value="1"
+        KeyPath="yes" />
+    </Component>
+  </Package>
+</Wix>
